@@ -304,7 +304,8 @@ header h1 {
 .nutrition-info {
     display: flex;
     justify-content: space-around;
-    flex-wrap: wrap; /* NEW: Allow wrapping for small screens */
+    flex-wrap: wrap;
+    /* NEW: Allow wrapping for small screens */
     margin: var(--spacing-md) 0;
     background: var(--primary-light);
     padding: 10px;
@@ -356,4 +357,62 @@ header h1 {
     font-size: 2rem;
     color: var(--primary-color);
     margin-bottom: 0.5rem;
+}
+
+/* Scan Result Refactor */
+.result-card {
+    background: var(--card-bg);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    margin-top: var(--spacing-md);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    animation: slideUp 0.4s ease-out;
+}
+
+.scan-header {
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.product-img {
+    height: 220px;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-sm);
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
+    transition: transform 0.3s;
+}
+
+.product-img:hover {
+    transform: scale(1.05);
+}
+
+.scan-header h3 {
+    font-size: 1.5rem;
+    color: var(--text-main);
+    margin-bottom: 0.2rem;
+    font-weight: 700;
+}
+
+.product-brand {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

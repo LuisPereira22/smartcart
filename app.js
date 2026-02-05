@@ -25,21 +25,36 @@ let html5QrcodeScanner = null;
 
 // Init
 function init() {
+    console.log("App initialized");
     setupEventListeners();
     renderFreshCategories();
 
     // Check for camera permissions early (optional)
-    Html5Qrcode.getCameras().then(devices => {
-        if (devices && devices.length) {
-            console.log("Cameras found:", devices);
-        }
-    }).catch(err => console.log("Camera error", err));
+    if (typeof Html5Qrcode !== 'undefined') {
+        Html5Qrcode.getCameras().then(devices => {
+            if (devices && devices.length) {
+                console.log("Cameras found:", devices);
+            }
+        }).catch(err => console.log("Camera error", err));
+    } else {
+        console.warn("Html5Qrcode library not loaded");
+    }
 }
 
 function setupEventListeners() {
+    console.log("Setting up event listeners");
     // Navigation
-    document.getElementById('start-btn').addEventListener('click', () => navigateTo('dashboard'));
-    backBtn.addEventListener('click', handleBack);
+    const startBtn = document.getElementById('start-btn');
+    if (startBtn) {
+        startBtn.addEventListener('click', () => {
+            console.log("Start button clicked");
+            navigateTo('dashboard');
+        });
+    } else {
+        console.error("Start button not found in DOM");
+    }
+
+    if (backBtn) backBtn.addEventListener('click', handleBack);
 
     // Dashboard Menu
     document.querySelectorAll('.menu-card').forEach(card => {
@@ -58,44 +73,12 @@ function setupEventListeners() {
     });
 
     // Theme Toggle
-    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+    const themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) themeBtn.addEventListener('click', toggleTheme);
 
     // Scanner Controls
-    document.getElementById('stop-scan-btn').addEventListener('click', stopScanner);
-}
-
-// Scanner Logic
-function startScanner() {
-    const container = document.getElementById('scanner-container');
-    container.innerHTML = ''; // Clear previous
-    document.getElementById('scan-result').classList.add('hidden');
-
-    html5QrcodeScanner = new Html5Qrcode("scanner-container");
-
-    const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-
-    html5QrcodeScanner.start(
-        { facingMode: "environment" },
-        config,
-        onScanSuccess,
-        (errorMessage) => {
-            // Parsing error, ignore 
-        }
-    ).catch(err => {
-        console.error(err);
-        container.innerHTML = `<p style="color:white; text-align:center; padding-top:100px;">Camera access failed.<br>Ensure you are using HTTPS or Localhost.</p>`;
-    });
-}
-
-
-
-function onScanSuccess(decodedText, decodedResult) {
-    if (html5QrcodeScanner) {
-        html5QrcodeScanner.stop().then(() => {
-            console.log("Scanned:", decodedText);
-            fetchProductData(decodedText);
-        });
-    }
+    const stopScanBtn = document.getElementById('stop-scan-btn');
+    if (stopScanBtn) stopScanBtn.addEventListener('click', () => stopScanner(true));
 }
 
 async function fetchProductData(barcode) {
