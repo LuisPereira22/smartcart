@@ -147,7 +147,9 @@ header h1 {
 }
 
 .main-logo-img {
-    max-width: 250px;
+    width: 60%;
+    max-width: 180px;
+    /* Smaller for mobile default */
     height: auto;
     filter: drop-shadow(0 5px 15px rgba(46, 204, 113, 0.3));
     transition: transform 0.3s ease;
