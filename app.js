@@ -140,7 +140,7 @@ function renderProductResult(product, barcode, isMock) {
     const sugar = nutriments['sugars_100g'] || 0;
     const b12 = nutriments['vitamin-b12_100g'] || 0;
 
-    const isFood = (calories > 0 || protein > 0) || isMock;
+    const isFood = (calories > 0 || protein > 0 || b12 > 0) || isMock;
 
     let content = `
         <div style="text-align:center;">
@@ -308,7 +308,7 @@ function showCategory(catId) {
             <div class="product-card" onclick="showProductDetails('${catId}', '${prod.id}')">
                 <div class="product-icon"><i class="fas fa-leaf"></i></div>
                 <h3>${prod.name}</h3>
-                <p>${prod.kCal} kCal / ${prod.unit}</p>
+                <p>${prod.kCal} kCal | ${prod.b12 || 0}µg B12 / ${prod.unit}</p>
             </div>
             `).join('')}
         </div>
@@ -402,12 +402,16 @@ function renderCart() {
 
     const totalCalsEl = document.getElementById('total-cals');
     const totalProteinEl = document.getElementById('total-protein');
-    const warningsContainer = document.querySelector('.cart-summary .warnings'); // We need to add this container first if not present
+    const totalSugarEl = document.getElementById('total-sugar');
+    const totalB12El = document.getElementById('total-b12');
+    const warningsContainer = document.querySelector('.cart-summary .warnings');
 
     if (state.cart.length === 0) {
         container.innerHTML = '<p style="text-align:center; padding: 20px;">Your cart is empty.</p>';
-        totalCalsEl.innerText = '0';
-        totalProteinEl.innerText = '0';
+        if (totalCalsEl) totalCalsEl.innerText = '0';
+        if (totalProteinEl) totalProteinEl.innerText = '0';
+        if (totalSugarEl) totalSugarEl.innerText = '0';
+        if (totalB12El) totalB12El.innerText = '0';
         if (warningsContainer) warningsContainer.innerHTML = '';
         return;
     }
@@ -457,8 +461,8 @@ function renderCart() {
         <h3>Total</h3>
         <p>Calories: <span id="total-cals">${totalCals.toFixed(0)}</span></p>
         <p>Protein: <span id="total-protein">${totalProtein.toFixed(1)}</span>g</p>
-        <p>Sugar: <span>${totalSugar.toFixed(1)}</span>g</p>
-        <p>Vit B12: <span>${totalB12.toFixed(2)}</span>µg</p>
+        <p>Sugar: <span id="total-sugar">${totalSugar.toFixed(1)}</span>g</p>
+        <p>Vit B12: <span id="total-b12">${totalB12.toFixed(2)}</span>µg</p>
     `;
 
     if (totalSugar > 50) {

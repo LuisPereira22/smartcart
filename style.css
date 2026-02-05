@@ -304,6 +304,7 @@ header h1 {
 .nutrition-info {
     display: flex;
     justify-content: space-around;
+    flex-wrap: wrap; /* NEW: Allow wrapping for small screens */
     margin: var(--spacing-md) 0;
     background: var(--primary-light);
     padding: 10px;
