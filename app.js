@@ -144,7 +144,7 @@ function renderProductResult(product, barcode, isMock) {
 
     let content = `
         <div style="text-align:center;">
-             <img src="${image}" style="height:100px; border-radius:8px; margin-bottom:10px;">
+             <img src="${image}" style="height:200px; max-width:100%; object-fit:contain; border-radius:8px; margin-bottom:15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
              <h3>${name}</h3>
              <small>${brands}</small>
         </div>

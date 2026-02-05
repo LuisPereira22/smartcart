@@ -8,7 +8,8 @@ const MOCK_DB = {
                 "energy-kcal_100g": 350,
                 proteins_100g: 12,
                 sugars_100g: 18,
-                fat_100g: 10
+                fat_100g: 10,
+                "vitamin-b12_100g": 1.5
             },
             image_url: "https://via.placeholder.com/150?text=Energy+Bar",
             allergens: "Nuts, Soy"
