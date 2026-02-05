@@ -140,10 +140,21 @@ header h1 {
     background: radial-gradient(circle at top right, var(--primary-light), transparent 40%);
 }
 
-.logo-placeholder {
-    font-size: 4rem;
-    margin-bottom: var(--spacing-lg);
-    color: var(--primary-color);
+.logo-container {
+    margin-bottom: var(--spacing-md);
+    display: flex;
+    justify-content: center;
+}
+
+.main-logo-img {
+    max-width: 250px;
+    height: auto;
+    filter: drop-shadow(0 5px 15px rgba(46, 204, 113, 0.3));
+    transition: transform 0.3s ease;
+}
+
+.main-logo-img:hover {
+    transform: scale(1.05);
 }
 
 /* Dashboard View */
