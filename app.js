@@ -87,14 +87,7 @@ function startScanner() {
     });
 }
 
-function stopScanner() {
-    if (html5QrcodeScanner) {
-        html5QrcodeScanner.stop().then(() => {
-            console.log("Scanner stopped");
-        }).catch(err => console.error("Failed to stop scanner", err));
-    }
-    navigateTo('dashboard');
-}
+
 
 function onScanSuccess(decodedText, decodedResult) {
     if (html5QrcodeScanner) {
@@ -475,17 +468,26 @@ function startScanner() {
     container.innerHTML = ''; // Clear previous
     document.getElementById('scan-result').classList.add('hidden');
 
-    // Add Simulation Button for Demo
-    const simBtn = document.createElement('button');
-    simBtn.className = 'btn btn-secondary';
-    simBtn.style.marginBottom = '10px';
-    simBtn.style.fontSize = '0.8rem';
-    simBtn.innerText = "Simulate Scan (Demo Code)";
-    simBtn.onclick = () => {
-        stopScanner();
-        fetchProductData("123456789");
-    };
-    container.parentNode.insertBefore(simBtn, container);
+    // Controls Container (Prevent Duplicates)
+    if (!document.getElementById('scanner-controls')) {
+        const controls = document.createElement('div');
+        controls.id = 'scanner-controls';
+        controls.style.marginBottom = '15px';
+        controls.innerHTML = `
+            <div style="display:flex; gap:10px; justify-content:center; margin-bottom:10px;">
+                <input type="text" id="manual-barcode" placeholder="Enter barcode" style="padding:8px; border-radius:4px; border:1px solid #ccc; width:60%;">
+                <button class="btn" style="padding:8px 15px;" onclick="handleManualSearch()">Go</button>
+            </div>
+            <button id="sim-scan-btn" class="btn btn-secondary" style="font-size:0.8rem; width:100%;">Simulate Scan (Demo Code)</button>
+        `;
+        container.parentNode.insertBefore(controls, container);
+
+        // Bind Sim Button
+        document.getElementById('sim-scan-btn').onclick = () => {
+            stopScanner(false);
+            fetchProductData("123456789");
+        };
+    }
 
     html5QrcodeScanner = new Html5Qrcode("scanner-container");
 
@@ -502,6 +504,36 @@ function startScanner() {
         console.error(err);
         container.innerHTML = `<p style="color:white; text-align:center; padding-top:100px;">Camera access failed.<br>Ensure you are using HTTPS or Localhost.</p>`;
     });
+}
+
+function stopScanner(shouldNavigate = true) {
+    if (html5QrcodeScanner) {
+        html5QrcodeScanner.stop().then(() => {
+            console.log("Scanner stopped");
+        }).catch(err => console.error("Failed to stop scanner", err));
+    }
+    if (shouldNavigate) {
+        navigateTo('dashboard');
+    }
+}
+
+window.handleManualSearch = function () {
+    const code = document.getElementById('manual-barcode').value;
+    if (code && code.trim() !== "") {
+        stopScanner(false);
+        fetchProductData(code.trim());
+    } else {
+        alert("Please enter a barcode.");
+    }
+}
+
+function onScanSuccess(decodedText, decodedResult) {
+    if (html5QrcodeScanner) {
+        html5QrcodeScanner.stop().then(() => {
+            console.log("Scanned:", decodedText);
+            fetchProductData(decodedText);
+        });
+    }
 }
 
 window.removeFromCart = function (index) {
