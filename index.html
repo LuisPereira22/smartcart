@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Shopping Cart</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- HTML5 QR Code Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+</head>
+<body>
+
+<div id="app">
+    <!-- Header (Shared) -->
+    <header id="main-header" class="hidden">
+        <div class="header-left">
+            <button id="back-btn" class="btn-icon"><i class="fas fa-arrow-left"></i></button>
+            <h1 id="page-title">Dashboard</h1>
+        </div>
+        <div class="header-right">
+            <button id="theme-toggle" class="btn-icon"><i class="fas fa-moon"></i></button>
+        </div>
+    </header>
+
+    <!-- Home View -->
+    <section id="home-view" class="view">
+        <div class="logo-placeholder">
+            <i class="fas fa-shopping-cart"></i>
+        </div>
+        <h1>Smart Cart</h1>
+        <p>The Future of Shopping</p>
+        <button id="start-btn" class="btn btn-large">Start Shopping</button>
+    </section>
+
+    <!-- Dashboard View -->
+    <section id="dashboard-view" class="view hidden">
+        <h2>Welcome!</h2>
+        <p>What would you like to do?</p>
+        <div class="grid-menu">
+            <div class="menu-card" data-action="scan">
+                <i class="fas fa-barcode"></i>
+                <span>Scan Product</span>
+            </div>
+            <div class="menu-card" data-action="fresh">
+                <i class="fas fa-apple-alt"></i>
+                <span>Fresh Products</span>
+            </div>
+            <div class="menu-card" data-action="cart">
+                <i class="fas fa-shopping-basket"></i>
+                <span>View Cart</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scanner View -->
+    <section id="scanner-view" class="view hidden">
+        <div id="scanner-container"></div>
+        <p class="instruction">Point camera at a barcode</p>
+        <button id="stop-scan-btn" class="btn btn-secondary">Stop Scanning</button>
+        
+        <!-- Scan Result Modal (Hidden by default) -->
+        <div id="scan-result" class="result-card hidden">
+            <!-- Populated via JS -->
+        </div>
+    </section>
+
+    <!-- Fresh Products View -->
+    <section id="fresh-view" class="view hidden">
+        <!-- Categories -->
+        <div id="fresh-categories" class="category-grid">
+            <!-- Populated via JS -->
+        </div>
+        <!-- Product List (Hidden initially) -->
+        <div id="fresh-products" class="hidden">
+            <!-- Populated via JS -->
+        </div>
+    </section>
+
+    <!-- Cart View -->
+    <section id="cart-view" class="view hidden">
+        <div id="cart-items-container">
+            <!-- Items injected here -->
+        </div>
+        <div class="cart-summary">
+            <h3>Total</h3>
+            <p>Calories: <span id="total-cals">0</span></p>
+            <p>Protein: <span id="total-protein">0</span>g</p>
+            <button id="checkout-btn" class="btn btn-large">Finish Shopping</button>
+        </div>
+    </section>
+
+</div>
+
+<script src="products.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
