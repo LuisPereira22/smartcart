@@ -138,6 +138,7 @@ function renderProductResult(product, barcode, isMock) {
     const calories = nutriments['energy-kcal_100g'] || 0;
     const protein = nutriments['proteins_100g'] || 0;
     const sugar = nutriments['sugars_100g'] || 0;
+    const b12 = nutriments['vitamin-b12_100g'] || 0;
 
     const isFood = (calories > 0 || protein > 0) || isMock;
 
@@ -155,11 +156,12 @@ function renderProductResult(product, barcode, isMock) {
                 <div class="nutri-item"><span>Cal/100g</span> <strong>${calories}</strong></div>
                 <div class="nutri-item"><span>Protein</span> <strong>${protein}g</strong></div>
                 <div class="nutri-item"><span>Sugar</span> <strong>${sugar}g</strong></div>
+                <div class="nutri-item"><span>Vit B12</span> <strong>${b12}µg</strong></div>
             </div>
             
             ${getWarnings(nutriments)}
             
-            <button class="btn btn-large" onclick="addScannedToCart('${barcode}', '${name.replace(/'/g, "\\'")}', ${calories}, ${protein}, ${sugar}, '${image}')">
+            <button class="btn btn-large" onclick="addScannedToCart('${barcode}', '${name.replace(/'/g, "\\'")}', ${calories}, ${protein}, ${sugar}, ${b12}, '${image}')">
                 Add to Cart
             </button>
         `;
@@ -204,15 +206,17 @@ function renderNotFound(barcode) {
 }
 
 // Add scanned item to cart
-window.addScannedToCart = function (id, name, kCal, protein, sugar, img) {
+window.addScannedToCart = function (id, name, kCal, protein, sugar, b12, img) {
     const cartItem = {
         name: name,
         kCal: kCal,
         protein: protein,
         sugar: sugar,
+        b12: b12 || 0,
         qty: 1, // Default 1 for scanned
         unit: 'item',
-        totalCal: kCal
+        totalCal: kCal,
+        totalB12: (b12 || 0)
     };
 
     state.cart.push(cartItem);
@@ -331,6 +335,7 @@ function showProductDetails(catId, prodId) {
                 <div class="nutri-item"><span>Calories</span> <strong>${product.kCal}</strong></div>
                 <div class="nutri-item"><span>Protein</span> <strong>${product.protein}g</strong></div>
                 <div class="nutri-item"><span>Sugar</span> <strong>${product.sugar}g</strong></div>
+                <div class="nutri-item"><span>Vit B12</span> <strong>${product.b12 || 0}µg</strong></div>
             </div>
 
             <div class="quantity-control">
@@ -364,9 +369,11 @@ window.addToCart = function (catId, prodId, qty) {
         kCal: product.kCal,
         protein: product.protein,
         sugar: product.sugar,
+        b12: product.b12 || 0,
         qty: qty,
         unit: product.unit,
-        totalCal: product.kCal * qty
+        totalCal: product.kCal * qty,
+        totalB12: (product.b12 || 0) * qty
     };
 
     state.cart.push(cartItem);
@@ -408,12 +415,14 @@ function renderCart() {
     let totalCals = 0;
     let totalProtein = 0;
     let totalSugar = 0;
+    let totalB12 = 0;
     let allAllergens = new Set();
 
     state.cart.forEach((item, index) => {
         totalCals += item.totalCal;
         totalProtein += item.qty * item.protein;
         totalSugar += item.qty * item.sugar;
+        totalB12 += (item.b12 || 0) * item.qty;
 
         // Mock allergen logic (in a real app, we'd store allergens in the item)
         // For now, let's assume if it has nuts/gluten it's in the name or we stored it. 
@@ -449,6 +458,7 @@ function renderCart() {
         <p>Calories: <span id="total-cals">${totalCals.toFixed(0)}</span></p>
         <p>Protein: <span id="total-protein">${totalProtein.toFixed(1)}</span>g</p>
         <p>Sugar: <span>${totalSugar.toFixed(1)}</span>g</p>
+        <p>Vit B12: <span>${totalB12.toFixed(2)}</span>µg</p>
     `;
 
     if (totalSugar > 50) {
@@ -475,7 +485,7 @@ function startScanner() {
         controls.style.marginBottom = '15px';
         controls.innerHTML = `
             <div style="display:flex; gap:10px; justify-content:center; margin-bottom:10px;">
-                <input type="number" id="manual-barcode" placeholder="Enter barcode" inputmode="numeric" pattern="[0-9]*" style="padding:12px; font-size:1rem; border-radius:4px; border:1px solid #ccc; width:70%;">
+                <input type="number" id="manual-barcode" placeholder="Enter barcode" inputmode="numeric" pattern="[0-9]*" style="padding:12px; font-size:16px; border-radius:4px; border:1px solid #ccc; width:70%;">
                 <button class="btn" style="padding:12px 20px; font-size:1rem;" onclick="handleManualSearch()">Go</button>
             </div>
             <button id="sim-scan-btn" class="btn btn-secondary" style="font-size:0.8rem; width:100%;">Simulate Scan (Demo Code)</button>
