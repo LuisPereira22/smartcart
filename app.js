@@ -475,8 +475,8 @@ function startScanner() {
         controls.style.marginBottom = '15px';
         controls.innerHTML = `
             <div style="display:flex; gap:10px; justify-content:center; margin-bottom:10px;">
-                <input type="text" id="manual-barcode" placeholder="Enter barcode" style="padding:8px; border-radius:4px; border:1px solid #ccc; width:60%;">
-                <button class="btn" style="padding:8px 15px;" onclick="handleManualSearch()">Go</button>
+                <input type="number" id="manual-barcode" placeholder="Enter barcode" inputmode="numeric" pattern="[0-9]*" style="padding:12px; font-size:1rem; border-radius:4px; border:1px solid #ccc; width:70%;">
+                <button class="btn" style="padding:12px 20px; font-size:1rem;" onclick="handleManualSearch()">Go</button>
             </div>
             <button id="sim-scan-btn" class="btn btn-secondary" style="font-size:0.8rem; width:100%;">Simulate Scan (Demo Code)</button>
         `;
